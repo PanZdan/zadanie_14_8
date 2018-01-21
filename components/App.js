@@ -18,21 +18,31 @@ App = React.createClass({
       });
     }.bind(this));
   },
-  getGif: function(searchingText, callback) {  // 1.
-    var url = 'http://api.giphy.com/v1/gifs/random?api_key=' + 'qAt0Z7brJVcMiLQ4xeBO2HEyorkir6Rt' + '&tag=' + searchingText;  // 2.
-    var xhr = new XMLHttpRequest();  // 3.
-    xhr.open('GET', url);
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        var data = JSON.parse(xhr.responseText).data; // 4.
-        var gif = {  // 5.
-          url: data.fixed_width_downsampled_url,
-          sourceUrl: data.url
+  getGif: function(searchingText) {
+    return new Promise(
+      function (resolve, reject) {
+        var url = 'http://api.giphy.com/v1/gifs/random?api_key=' + 'qAt0Z7brJVcMiLQ4xeBO2HEyorkir6Rt' + '&tag=' + searchingText;
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          if (this.status === 200) {
+            var data = JSON.parse(this.responseText).data;
+            var gif = {
+                url: data.fixed_width_downsampled_url,
+                sourceUrl: data.url
+            };
+            resolve(gif);
+          } else {
+            reject(new Error(this.statusText));
+          }
         };
-        callback(gif);  // 6.
+        xhr.onerror = function () {
+            reject(new Error(
+                `XMLHttpRequest Error: ${this.statusText}`));
+            };
+        xhr.open('GET', url);
+        xhr.send();
       }
-    };
-    xhr.send();
+    );
   },
   render: function() {
 
