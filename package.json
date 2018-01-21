@@ -1,0 +1,49 @@
+{
+  "name": "nauka-gita-zadanie2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "http-server",
+    "test": "npm run test:html \"test:js\" ",
+    "test:html": "glob-run nu-html-checker *.html",
+    "test:js": "glob-run jshint js/*.js *.js",
+    "build": "npm run build:clean && npm run build:sassprefixer && npm run test && npm run watch",
+    "build:clean": "rimraf css/",
+    "build:sass": "sass --update scss/style.scss:css/style.css",
+    "build:autoprefixer": "autoprefixer-cli css/style.css",
+    "watch": "parallelshell \"npm run watch:sassprefixer\" \"npm run watch:browser-sync\" ",
+    "watch:sass": "sass --watch scss/style.scss:css/style.css",
+    "watch:autoprefixer": "onchange -d 100 css/style.css -- autoprefixer-cli -o css/style.prefixed.css css/style.css",
+    "watch:browser-sync": "glob-run browser-sync start --server --files css/*.css *.html js/*.js *.js",
+    "build:sassprefixer": "npm run build:sass && npm run build:autoprefixer",
+    "watch:sassprefixer": "onchange -d 100 scss/*.scss -- npm run build:sassprefixer"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel": "^6.23.0",
+    "babel-standalone": "^6.26.0",
+    "browser-sync": "^2.18.13",
+    "glob-run": "^0.1.6",
+    "jshint": "^2.9.5",
+    "node-sass": "^4.7.2",
+    "onchange": "^3.2.1",
+    "rimraf": "^2.6.2"
+  },
+  "devDependencies": {
+    "autoprefixer-cli": "^1.0.0",
+    "http-server": "^0.11.1",
+    "nu-html-checker": "^0.1.0",
+    "parallelshell": "^3.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PanZdan/zadanie_11_6.git"
+  },
+  "bugs": {
+    "url": "https://github.com/PanZdan/zadanie_11_6/issues"
+  },
+  "homepage": "https://github.com/PanZdan/zadanie_11_6#readme"
+}
