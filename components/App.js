@@ -1,3 +1,7 @@
+var GIPHY_API_URL = 'https://api.giphy.com/v1/gifs/random?api_key=',
+    GIPHY_PUB_KEY = 'qAt0Z7brJVcMiLQ4xeBO2HEyorkir6Rt';
+
+
 App = React.createClass({
   getInitialState() {
     return {
@@ -16,12 +20,12 @@ App = React.createClass({
         gif: gif,  // b
         searchingText: searchingText  // c
       })
-    )
+    ).catch(error => console.error('Something went wrong', error));
   },
   getGif: function(searchingText) { 
     return new Promise(
       function(resolve, reject) {// 1.
-        var url = 'https://api.giphy.com/v1/gifs/random?api_key=' + 'qAt0Z7brJVcMiLQ4xeBO2HEyorkir6Rt' + '&tag=' + searchingText;  // 2.
+        var url = GIPHY_API_URL + GIPHY_PUB_KEY + '&tag=' + searchingText;  // 2.
         var xhr = new XMLHttpRequest();  // 3.
         xhr.onload = function() {
           if (xhr.status === 200) {
@@ -31,6 +35,8 @@ App = React.createClass({
               sourceUrl: data.url
             };
             resolve(gif);  // 6.
+          } else {
+              reject(new Error(this.statusText)); // Dostaliśmy odpowiedź, ale jest to np 404
           }
         };
         xhr.onerror = function () {
